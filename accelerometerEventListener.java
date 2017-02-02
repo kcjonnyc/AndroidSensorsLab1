@@ -52,6 +52,7 @@ public class accelerometerEventListener implements SensorEventListener {
     public void callFSM(){
 
         float deltaA = aReadings[99][0] - aReadings[98][0];
+        Log.d("Readings: ", Float.toString(aReadings[99][0]));
 
         switch (state) {
             case WAIT:
@@ -60,9 +61,6 @@ public class accelerometerEventListener implements SensorEventListener {
                 signature = mySig.SIG_X;
 
                 Log.d("FSM: ", "State WAIT");
-                Log.d("Readings: ", Float.toString(aReadings[0][0]));
-                Log.d("Readings: ", Float.toString(aReadings[1][0]));
-                Log.d("deltaA: ", Float.toString(deltaA));
 
                 if (deltaA > THRES_A[0]) {
                     state = myState.RISE_A;
@@ -151,8 +149,6 @@ public class accelerometerEventListener implements SensorEventListener {
             filteredReadings[2] += (se.values[2] - filteredReadings[2]) / C;
             graph.addPoint (filteredReadings);
 
-            String s = String.format("(%.2f, %.2f, %.2f)", filteredReadings[0], filteredReadings[1], filteredReadings[2]);
-
             // create a new array and copy over old values shifted by one
             for(int i = 1; i < 100; i++){
                 aReadings[i - 1][0] = aReadings[i][0];
@@ -163,6 +159,7 @@ public class accelerometerEventListener implements SensorEventListener {
                 aReadings[99][j] = filteredReadings[j];
             }
             // we will always have the most recent 100 values stored
+            String s = String.format("(%.2f, %.2f, %.2f)", aReadings[99][0], aReadings[99][1], aReadings[99][2]);
 
             // start FSM analysis
             callFSM();
@@ -190,3 +187,4 @@ public class accelerometerEventListener implements SensorEventListener {
         }
     }
 }
+
